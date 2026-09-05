@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Get Well Soon, Mansha! 🌸</title>
-  <meta name="description" content="A warm get well soon page for Mansha. Wishing you a speedy and peaceful recovery!">
+  <meta name="description" content="A warm get well soon recovery space for Mansha. Wishing you a speedy and peaceful recovery!">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -12,238 +12,312 @@
 </head>
 <body>
 
-  <!-- Sleek Top Mobile Header Bar -->
+  <!-- Sleek Fixed Top Mobile Header Bar -->
   <header class="mobile-header">
     <div class="header-left">
       <div class="user-avatar">🌸</div>
-      <div>
+      <div class="header-titles">
         <h1 class="header-title">Mansha's Care Space</h1>
         <span class="header-subtitle"><span class="green-dot"></span> Attending: Dr. Arsalan, M.D.</span>
       </div>
     </div>
-    <button id="sound-toggle-btn" class="header-audio-btn">
+    <button id="sound-toggle-btn" class="header-audio-btn" aria-label="Toggle sound">
       <span class="sound-icon">🎵</span>
+      <span class="sound-text">Ambient Sound</span>
     </button>
   </header>
 
-  <!-- Main Compact Mobile App Screen -->
-  <main class="mobile-app">
+  <!-- Main Mobile App Layout -->
+  <main class="app-wrapper">
 
-    <!-- 1. COMPACT HERO BANNER -->
-    <section class="mobile-hero">
-      <div class="hero-content">
-        <span class="hero-pill">✨ Get Well Soon</span>
-        <h2>Wishing You a Speedy Recovery, <span class="name">Mansha</span>!</h2>
-        <p>Rest up, sip warm tea, and let your body recharge peacefully!</p>
-        <button id="hug-main-btn" class="main-cheer-btn">
-          <span>✨ Send Warm Cheer</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- 2. HORIZONTAL STATS CHIP ROW -->
-    <section class="stats-chip-row">
-      <div class="chip">
-        <span class="chip-icon">🛌</span>
-        <div>
-          <span class="chip-val">100%</span>
-          <span class="chip-lbl">Rest Level</span>
-        </div>
-      </div>
-      <div class="chip">
-        <span class="chip-icon">💌</span>
-        <div>
-          <span class="chip-val">100%</span>
-          <span class="chip-lbl">Support</span>
-        </div>
-      </div>
-      <div class="chip">
-        <span class="chip-icon">💊</span>
-        <div>
-          <span class="chip-val">Daily</span>
-          <span class="chip-lbl">Good Vibes</span>
-        </div>
-      </div>
-      <div class="chip">
-        <span class="chip-icon">⚡</span>
-        <div>
-          <span id="energy-counter" class="chip-val">75%</span>
-          <span class="chip-lbl">Energy</span>
+    <!-- 1. HERO BANNER SECTION -->
+    <section class="app-section hero-section" id="hero">
+      <div class="hero-card">
+        <span class="hero-badge">✨ Get Well Soon</span>
+        <h2 class="hero-title">Wishing You a Speedy Recovery, <span class="highlight-name">Mansha</span>! 🌸</h2>
+        <p class="hero-desc">Rest up, sip warm chamomile tea, and let your body recharge peacefully. Sending warm recovery cheer!</p>
+        <div class="hero-btn-group">
+          <button id="hug-main-btn" class="btn-primary">
+            <span>✨ Send Warm Cheer</span>
+          </button>
+          <a href="#prescription" class="btn-secondary">
+            <span>📋 View Doctor's Rx</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- 3. SEGMENTED NAVIGATION TABS (ZERO WASTED SPACE) -->
-    <div class="segmented-control">
-      <button class="seg-tab active" data-tab="goals-view">📋 Goals</button>
-      <button class="seg-tab" data-tab="remedies-view">☕ Remedies</button>
-      <button class="seg-tab" data-tab="timer-view">⏳ Timer</button>
-      <button class="seg-tab" data-tab="wishes-view">💌 Wishes</button>
-      <button class="seg-tab" data-tab="game-view">🎮 Game</button>
-    </div>
+    <!-- 2. RECOVERY STATUS DASHBOARD -->
+    <section class="app-section" id="dashboard">
+      <div class="section-heading">
+        <h2>✨ Recovery Status Monitor</h2>
+        <p>Positivity & health index update</p>
+      </div>
 
-    <!-- 4. SEGMENTED TAB VIEWS -->
-    <div class="tab-views-container">
-
-      <!-- TAB 1: CARE GOALS VIEW -->
-      <div id="goals-view" class="tab-view active">
-        <div class="view-card">
-          <div class="view-header">
-            <h3>Daily Recovery Goals</h3>
-            <span id="rx-status-text" class="progress-pill">0 of 5</span>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-icon">🛌</span>
+            <span class="stat-lbl">Rest Level</span>
           </div>
+          <div class="stat-val">100%</div>
+          <div class="stat-bar"><div class="bar-fill" style="width: 100%;"></div></div>
+        </div>
 
-          <div class="goals-list" id="rx-checklist">
-            <label class="goal-item">
-              <input type="checkbox" id="chk-1">
-              <span class="box"></span>
-              <span class="txt">Sip warm lemon honey tea 🍵</span>
-            </label>
-            <label class="goal-item">
-              <input type="checkbox" id="chk-2">
-              <span class="box"></span>
-              <span class="txt">Zero stress, peaceful thoughts 🌿</span>
-            </label>
-            <label class="goal-item">
-              <input type="checkbox" id="chk-3">
-              <span class="box"></span>
-              <span class="txt">Watch cozy movie or read book 🎬</span>
-            </label>
-            <label class="goal-item">
-              <input type="checkbox" id="chk-4">
-              <span class="box"></span>
-              <span class="txt">Take deep breaths & extra nap 💤</span>
-            </label>
-            <label class="goal-item">
-              <input type="checkbox" id="chk-5">
-              <span class="box"></span>
-              <span class="txt">Remember everyone is rooting for you 🌟</span>
-            </label>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-icon">💌</span>
+            <span class="stat-lbl">Support</span>
           </div>
+          <div class="stat-val">100%</div>
+          <div class="stat-bar"><div class="bar-fill" style="width: 100%;"></div></div>
+        </div>
 
-          <div class="progress-bar-box">
-            <div id="rx-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-icon">💊</span>
+            <span class="stat-lbl">Good Vibes</span>
+          </div>
+          <div class="stat-val">Daily</div>
+          <div class="stat-bar"><div class="bar-fill" style="width: 90%;"></div></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-lbl">Energy</span>
+          </div>
+          <div id="energy-val" class="stat-val">75%</div>
+          <div class="stat-bar"><div id="energy-bar" class="bar-fill" style="width: 75%;"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DOCTOR'S PRESCRIPTION CHECKLIST -->
+    <section class="app-section" id="prescription">
+      <div class="card-box">
+        <div class="card-header-row">
+          <div>
+            <span class="rx-tag">📋 MEDICAL CARE RX</span>
+            <h2 class="card-title">Daily Recovery Checklist</h2>
+          </div>
+          <span id="rx-status-text" class="status-badge">0 of 5 done</span>
+        </div>
+
+        <div class="goals-list" id="rx-checklist">
+          <label class="goal-item">
+            <input type="checkbox" id="chk-1">
+            <span class="checkbox-box"></span>
+            <span class="goal-text">Sip warm lemon honey tea 🍵</span>
+          </label>
+
+          <label class="goal-item">
+            <input type="checkbox" id="chk-2">
+            <span class="checkbox-box"></span>
+            <span class="goal-text">Zero stress, peaceful thoughts 🌿</span>
+          </label>
+
+          <label class="goal-item">
+            <input type="checkbox" id="chk-3">
+            <span class="checkbox-box"></span>
+            <span class="goal-text">Watch cozy movie or read book 🎬</span>
+          </label>
+
+          <label class="goal-item">
+            <input type="checkbox" id="chk-4">
+            <span class="checkbox-box"></span>
+            <span class="goal-text">Take deep breaths & extra nap 💤</span>
+          </label>
+
+          <label class="goal-item">
+            <input type="checkbox" id="chk-5">
+            <span class="checkbox-box"></span>
+            <span class="goal-text">Remember everyone is rooting for you 🌟</span>
+          </label>
+        </div>
+
+        <div class="progress-container">
+          <div id="rx-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="rx-doctor-sign">
+          <span class="sign-icon">👨‍⚕️</span>
+          <div>
+            <strong>Dr. Arsalan, M.D.</strong>
+            <small>Attending Physician</small>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- TAB 2: REMEDIES VIEW -->
-      <div id="remedies-view" class="tab-view">
-        <div class="remedies-grid-2x2">
-          <div class="remedy-tile" onclick="triggerRemedy('tea')">
-            <span class="tile-icon">☕</span>
-            <h4>Warm Tea</h4>
-            <p>Lemon & Honey</p>
-            <span class="tile-btn">Serve ☕</span>
+    <!-- 4. COMFORT CARE REMEDIES -->
+    <section class="app-section" id="care-package">
+      <div class="section-heading">
+        <h2>💐 Comfort Remedies</h2>
+        <p>Tap any remedy to send instant warm cheer</p>
+      </div>
+
+      <div class="remedies-grid">
+        <div class="remedy-card" onclick="triggerRemedy('tea')">
+          <div class="remedy-icon">☕</div>
+          <h3>Warm Chamomile</h3>
+          <p>Lemon & Honey Brew</p>
+          <button class="remedy-btn">Serve Tea ☕</button>
+        </div>
+
+        <div class="remedy-card" onclick="triggerRemedy('flowers')">
+          <div class="remedy-icon">🌸</div>
+          <h3>Fresh Peonies</h3>
+          <p>Bouquet of Cheer</p>
+          <button class="remedy-btn">Send Flowers 🌸</button>
+        </div>
+
+        <div class="remedy-card" onclick="triggerRemedy('teddy')">
+          <div class="remedy-icon">🧸</div>
+          <h3>Plushie Hug</h3>
+          <p>Cozy Soft Warmth</p>
+          <button class="remedy-btn">Hug Plushie 🧸</button>
+        </div>
+
+        <div class="remedy-card" onclick="triggerRemedy('sun')">
+          <div class="remedy-icon">☀️</div>
+          <h3>Sunshine Rays</h3>
+          <p>Vitamin D Boost</p>
+          <button class="remedy-btn">Shine Rays ☀️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MILESTONE RECOVERY COUNTDOWN -->
+    <section class="app-section" id="recovery-countdown">
+      <div class="card-box text-center">
+        <span class="hero-badge">⏳ MILESTONE</span>
+        <h2 class="card-title">Full Recovery Countdown 🌸</h2>
+        <p class="card-subtitle">Resting & recharging body health to 100%!</p>
+
+        <div class="timer-grid">
+          <div class="timer-unit">
+            <span id="timer-days" class="timer-num">05</span>
+            <span class="timer-label">Days</span>
           </div>
-
-          <div class="remedy-tile" onclick="triggerRemedy('flowers')">
-            <span class="tile-icon">🌸</span>
-            <h4>Peonies</h4>
-            <p>Fresh Bouquet</p>
-            <span class="tile-btn">Send 🌸</span>
+          <span class="timer-colon">:</span>
+          <div class="timer-unit">
+            <span id="timer-hours" class="timer-num">12</span>
+            <span class="timer-label">Hours</span>
           </div>
-
-          <div class="remedy-tile" onclick="triggerRemedy('teddy')">
-            <span class="tile-icon">🧸</span>
-            <h4>Plushie</h4>
-            <p>Cozy Hug</p>
-            <span class="tile-btn">Comfort 🧸</span>
+          <span class="timer-colon">:</span>
+          <div class="timer-unit">
+            <span id="timer-minutes" class="timer-num">45</span>
+            <span class="timer-label">Mins</span>
           </div>
+          <span class="timer-colon">:</span>
+          <div class="timer-unit">
+            <span id="timer-seconds" class="timer-num">30</span>
+            <span class="timer-label">Secs</span>
+          </div>
+        </div>
 
-          <div class="remedy-tile" onclick="triggerRemedy('sun')">
-            <span class="tile-icon">☀️</span>
-            <h4>Sunshine</h4>
-            <p>Vitamin Boost</p>
-            <span class="tile-btn">Shine ☀️</span>
+        <div class="timer-footer-row">
+          <span>Target Date: <strong id="target-date-display">Resting & Recharging</strong></span>
+          <button id="customize-timer-btn" class="btn-outline-sm">Customize 📅</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. HEALTH BOOSTER MINI GAME -->
+    <section class="app-section" id="booster-game">
+      <div class="card-box">
+        <div class="card-header-row">
+          <div>
+            <h2 class="card-title">Health Booster Game ⚡</h2>
+            <p class="card-subtitle">Tap floating items to boost strength!</p>
+          </div>
+          <span class="score-pill">Score: <strong id="game-score">0</strong></span>
+        </div>
+
+        <div id="game-canvas-area" class="game-area-box">
+          <div id="game-start-overlay" class="game-start-overlay">
+            <div class="game-overlay-icon">🎯</div>
+            <p>Catch vitamins, tea & hearts floating down!</p>
+            <button id="start-game-btn" class="btn-primary">Start Game 🚀</button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- TAB 3: TIMER VIEW -->
-      <div id="timer-view" class="tab-view">
-        <div class="view-card text-center">
-          <h3>Full Recovery Countdown 🌸</h3>
-          <p class="sub-text">Resting and recharging to 100% health!</p>
+    <!-- 7. WISHING WALL -->
+    <section class="app-section" id="wishes">
+      <div class="card-box">
+        <h2 class="card-title">Wishing Wall for Mansha 💌</h2>
+        <p class="card-subtitle">Leave a warm note of cheer and encouragement</p>
 
-          <div class="compact-timer">
-            <div class="t-box"><span id="timer-days">05</span><small>Days</small></div>
-            <span class="t-colon">:</span>
-            <div class="t-box"><span id="timer-hours">12</span><small>Hours</small></div>
-            <span class="t-colon">:</span>
-            <div class="t-box"><span id="timer-minutes">45</span><small>Mins</small></div>
-            <span class="t-colon">:</span>
-            <div class="t-box"><span id="timer-seconds">30</span><small>Secs</small></div>
+        <form id="wish-form" class="wish-form">
+          <div class="form-inputs-grid">
+            <input type="text" id="sender-name" placeholder="Your Name" required maxlength="30">
+            <select id="wish-emoji">
+              <option value="🌸">🌸 Wish</option>
+              <option value="✨">✨ Healing</option>
+              <option value="🍵">🍵 Tea</option>
+              <option value="🌟">🌟 Sunshine</option>
+            </select>
           </div>
+          <textarea id="wish-message" placeholder="Write a cozy get well note for Mansha..." required maxlength="250" rows="3"></textarea>
+          <button type="submit" class="btn-primary">Pin Note to Board 📌</button>
+        </form>
 
-          <div class="timer-target-row">
-            <span>Target: <strong id="target-date-display">Resting & Recharging</strong></span>
-            <button id="customize-timer-btn" class="btn-sm">Set Date 📅</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: WISHES VIEW -->
-      <div id="wishes-view" class="tab-view">
-        <div class="view-card">
-          <h3>Wishing Wall 💌</h3>
-          
-          <form id="wish-form" class="compact-form">
-            <div class="form-grid">
-              <input type="text" id="sender-name" placeholder="Your Name" required maxlength="30">
-              <select id="wish-emoji">
-                <option value="🌸">🌸 Wish</option>
-                <option value="✨">✨ Healing</option>
-                <option value="🍵">🍵 Tea</option>
-                <option value="🌟">🌟 Sunshine</option>
-              </select>
-            </div>
-            <textarea id="wish-message" placeholder="Write a message for Mansha..." required maxlength="250" rows="2"></textarea>
-            <button type="submit" class="wish-submit-btn">Pin Note 📌</button>
-          </form>
-
-          <div class="wishes-list" id="wishes-container">
-            <div id="no-wishes-msg" class="empty-state">
-              <span>💌</span>
-              <p>No wishing notes pinned yet. Be the first!</p>
-            </div>
+        <div class="wishes-board" id="wishes-container">
+          <div id="no-wishes-msg" class="empty-wishes-box">
+            <span class="empty-icon">💌</span>
+            <p>No wishing notes pinned yet. Be the first to leave a message!</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- TAB 5: GAME VIEW -->
-      <div id="game-view" class="tab-view">
-        <div class="view-card">
-          <div class="view-header">
-            <h3>Health Booster Game ⚡</h3>
-            <span class="score-pill">Score: <strong id="game-score">0</strong></span>
-          </div>
-
-          <div id="game-canvas-area" class="compact-game-box">
-            <div id="game-start-overlay" class="game-overlay">
-              <p>Tap floating items to boost strength!</p>
-              <button id="start-game-btn" class="wish-submit-btn">Start Game 🚀</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <footer class="compact-footer">
-      <p>Attending Physician: <strong>Dr. Arsalan, M.D.</strong> • Warm Wishes for Mansha ✨</p>
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p>Attending Physician: <strong>Dr. Arsalan, M.D.</strong></p>
+      <p class="sub-footer">Crafted with Warm Wishes for Mansha ✨</p>
     </footer>
 
   </main>
 
-  <!-- Modal -->
+  <!-- MOBILE BOTTOM NAVIGATION DOCK -->
+  <nav class="mobile-bottom-dock" aria-label="Mobile Navigation">
+    <a href="#hero" class="dock-tab active">
+      <span class="dock-icon">🏠</span>
+      <span class="dock-lbl">Home</span>
+    </a>
+    <a href="#prescription" class="dock-tab">
+      <span class="dock-icon">📋</span>
+      <span class="dock-lbl">Rx</span>
+    </a>
+    <a href="#care-package" class="dock-tab">
+      <span class="dock-icon">💐</span>
+      <span class="dock-lbl">Remedies</span>
+    </a>
+    <a href="#recovery-countdown" class="dock-tab">
+      <span class="dock-icon">⏳</span>
+      <span class="dock-lbl">Timer</span>
+    </a>
+    <a href="#booster-game" class="dock-tab">
+      <span class="dock-icon">🎮</span>
+      <span class="dock-lbl">Game</span>
+    </a>
+    <a href="#wishes" class="dock-tab">
+      <span class="dock-icon">💌</span>
+      <span class="dock-lbl">Wishes</span>
+    </a>
+  </nav>
+
+  <!-- CHEER MODAL -->
   <div id="hug-modal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card">
-      <button id="modal-close" class="modal-close-btn">&times;</button>
+      <button id="modal-close" class="modal-close-btn" aria-label="Close">&times;</button>
       <div class="modal-emoji">✨🌸🌟</div>
       <h3>Healing Energy Sent!</h3>
       <p>A double dose of warm cheer and bright recovery energy has been sent to Mansha!</p>
-      <button onclick="closeModal()" class="wish-submit-btn">Thank You! 😊</button>
+      <button onclick="closeModal()" class="btn-primary">Thank You! 😊</button>
     </div>
   </div>
 

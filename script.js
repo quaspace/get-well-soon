@@ -1,27 +1,34 @@
 /* ==========================================================================
-   MANSHA'S CARE SPACE - HANDCRAFTED MOBILE APP CONTROLLER
+   MANSHA'S CARE SPACE - JAVASCRIPT CONTROLLER
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 0. SEGMENTED TAB SWITCHER
-  const segTabs = document.querySelectorAll('.seg-tab');
-  const tabViews = document.querySelectorAll('.tab-view');
+  // 1. MOBILE BOTTOM DOCK SCROLL OBSERVER
+  const dockTabs = document.querySelectorAll('.dock-tab');
+  const sections = document.querySelectorAll('section');
 
-  segTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      segTabs.forEach(t => t.classList.remove('active'));
-      tabViews.forEach(v => v.classList.remove('active'));
+  function updateActiveDock() {
+    let activeId = 'hero';
+    const scrollPos = window.scrollY + 140;
 
-      tab.classList.add('active');
-      const targetId = tab.getAttribute('data-tab');
-      const targetView = document.getElementById(targetId);
-      if (targetView) {
-        targetView.classList.add('active');
+    sections.forEach((sec) => {
+      if (scrollPos >= sec.offsetTop) {
+        activeId = sec.getAttribute('id');
       }
     });
-  });
 
-  // 1. AUDIO SYNTHESIZER
+    dockTabs.forEach((tab) => {
+      tab.classList.remove('active');
+      if (tab.getAttribute('href') === `#${activeId}`) {
+        tab.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveDock, { passive: true });
+  updateActiveDock();
+
+  // 2. AMBIENT AUDIO SYNTHESIZER
   const soundBtn = document.getElementById('sound-toggle-btn');
   let audioCtx = null;
   let isPlayingSound = false;
@@ -37,19 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
         audioCtx.resume();
         startSynth();
         isPlayingSound = true;
-        soundBtn.querySelector('.audio-icon').textContent = '🔊';
-        soundBtn.querySelector('.audio-label').textContent = 'Playing Ambient';
+        soundBtn.querySelector('.sound-icon').textContent = '🔊';
+        soundBtn.querySelector('.sound-text').textContent = 'Playing Ambient';
+        showToast("🎵 Playing soothing ambient sound");
       } else {
         stopSynth();
         isPlayingSound = false;
-        soundBtn.querySelector('.audio-icon').textContent = '🎵';
-        soundBtn.querySelector('.audio-label').textContent = 'Ambient Sound';
+        soundBtn.querySelector('.sound-icon').textContent = '🎵';
+        soundBtn.querySelector('.sound-text').textContent = 'Ambient Sound';
       }
     });
   }
 
   function startSynth() {
-    const freqs = [261.63, 329.63, 392.00];
+    const freqs = [261.63, 329.63, 392.00]; // Soft C-major triad
     synthNodes = freqs.map((freq) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -66,13 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function stopSynth() {
     synthNodes.forEach(({ osc, gain }) => {
-      if (gain) gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-      setTimeout(() => osc.stop(), 500);
+      if (gain && audioCtx) {
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+      }
+      setTimeout(() => { try { osc.stop(); } catch(e) {} }, 400);
     });
     synthNodes = [];
   }
 
-  // 2. CHECKLIST PROGRESS
+  // 3. CHECKLIST PROGRESS CONTROLLER
   const rxChecklist = document.getElementById('rx-checklist');
   const rxProgressBar = document.getElementById('rx-progress-bar');
   const rxStatusText = document.getElementById('rx-status-text');
@@ -94,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. MODAL CONTROLLER
+  // 4. CHEER MODAL CONTROLLER
   const hugMainBtn = document.getElementById('hug-main-btn');
   const hugModal = document.getElementById('hug-modal');
   const modalClose = document.getElementById('modal-close');
@@ -113,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hugMainBtn) hugMainBtn.addEventListener('click', openModal);
   if (modalClose) modalClose.addEventListener('click', closeModal);
 
-  // 4. REMEDY PICKER
+  // 5. COMFORT REMEDY PICKER
   window.triggerRemedy = function(type) {
     if (type === 'tea') {
       showToast("☕ Fresh Chamomile Tea served for Mansha!");
@@ -127,12 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerConfetti();
   };
 
-  // 5. MINI BOOSTER GAME
+  // 6. HEALTH BOOSTER MINI GAME
   const startGameBtn = document.getElementById('start-game-btn');
   const gameOverlay = document.getElementById('game-start-overlay');
   const gameArea = document.getElementById('game-canvas-area');
   const gameScoreElem = document.getElementById('game-score');
-  
+
   let score = 0;
   let gameInterval = null;
 
@@ -153,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = ['💊', '🍋', '💖', '🌸', '🍵', '☀️'];
     target.textContent = items[Math.floor(Math.random() * items.length)];
 
-    const randomX = Math.random() * (gameArea.clientWidth - 40);
-    target.style.left = `${randomX}px`;
+    const randomX = Math.random() * (gameArea.clientWidth - 44);
+    target.style.left = `${Math.max(10, randomX)}px`;
 
     target.addEventListener('click', () => {
       score += 10;
@@ -163,10 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gameArea.appendChild(target);
-    setTimeout(() => { if (target.parentNode) target.remove(); }, 3200);
+    setTimeout(() => { if (target.parentNode) target.remove(); }, 3000);
   }
 
-  // 6. COUNTDOWN TIMER
+  // 7. COUNTDOWN TIMER CONTROLLER
   const timerDays = document.getElementById('timer-days');
   const timerHours = document.getElementById('timer-hours');
   const timerMinutes = document.getElementById('timer-minutes');
@@ -211,20 +221,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (customizeTimerBtn) {
     customizeTimerBtn.addEventListener('click', () => {
-      const input = prompt("Enter target date (YYYY-MM-DD):", targetDate.toISOString().split('T')[0]);
+      const input = prompt("Enter target recovery date (YYYY-MM-DD):", targetDate.toISOString().split('T')[0]);
       if (input) {
         const newDate = new Date(input + "T00:00:00");
         if (!isNaN(newDate.getTime())) {
           targetDate = newDate;
           localStorage.setItem('mansha_target_date', newDate.toISOString());
           updateTimer();
-          showToast("📅 Target date updated!");
+          showToast("📅 Target recovery date updated!");
+        } else {
+          alert("Invalid date format. Please use YYYY-MM-DD.");
         }
       }
     });
   }
 
-  // 7. WISHES FORM & LOCALSTORAGE
+  // 8. WISHES FORM & LOCALSTORAGE BOARD
   const wishForm = document.getElementById('wish-form');
   const wishesContainer = document.getElementById('wishes-container');
 
@@ -305,36 +317,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadWishes();
 
-  // TOAST & CONFETTI
+  // TOAST NOTIFICATIONS & CONFETTI
   function showToast(msg) {
     const toast = document.createElement('div');
     toast.textContent = msg;
     toast.style.position = 'fixed';
-    toast.style.bottom = '75px';
+    toast.style.bottom = '74px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%)';
     toast.style.background = '#1a1d20';
     toast.style.color = '#ffffff';
     toast.style.padding = '10px 20px';
     toast.style.borderRadius = '50px';
-    toast.style.fontSize = '0.88rem';
-    toast.style.fontWeight = '600';
+    toast.style.fontSize = '0.85rem';
+    toast.style.fontWeight = '700';
     toast.style.zIndex = '3000';
-    toast.style.boxShadow = '0 4px 14px rgba(0,0,0,0.15)';
+    toast.style.boxShadow = '0 4px 14px rgba(0,0,0,0.18)';
 
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2800);
+    setTimeout(() => toast.remove(), 2600);
   }
 
   function triggerConfetti() {
     const emojis = ['🌸', '✨', '🍵', '☀️', '💖'];
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 15; i++) {
       const conf = document.createElement('div');
       conf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       conf.style.position = 'fixed';
       conf.style.left = `${Math.random() * 100}vw`;
       conf.style.top = '-20px';
-      conf.style.fontSize = '1.2rem';
+      conf.style.fontSize = '1.25rem';
       conf.style.zIndex = '3000';
       conf.style.pointerEvents = 'none';
       conf.style.transition = `all ${Math.random() * 1.5 + 1.5}s ease-out`;
