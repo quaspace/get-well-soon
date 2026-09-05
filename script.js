@@ -167,13 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
       startAmbientSynth();
       isPlayingSound = true;
       soundBtn.classList.add('playing');
-      soundBtn.querySelector('.sound-icon').textContent = '🔊';
       soundBtn.querySelector('.sound-text').textContent = 'Playing Calm Ambient';
     } else {
       stopAmbientSynth();
       isPlayingSound = false;
       soundBtn.classList.remove('playing');
-      soundBtn.querySelector('.sound-icon').textContent = '🎵';
       soundBtn.querySelector('.sound-text').textContent = 'Ambient Sound';
     }
   }
@@ -235,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (checkedCount === total) {
       triggerConfetti();
-      showToast("🎉 Yay Mansha! All doctor orders completed! 100% Healing Energy Activated! ✨");
+      showToast("Yay Mansha! All doctor orders completed! 100% Healing Energy Activated!");
     }
   }
 
@@ -265,17 +263,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // 6. REMEDY PICKER HANDLER
   window.triggerRemedy = function(remedyType) {
     if (remedyType === 'tea') {
-      showToast("🍵 Warm Chamomile Tea served with extra honey for Mansha!");
-      triggerConfetti(['🍵', '🐝', '🍋', '✨']);
+      showToast("Warm Lemon Honey Tea served with extra sweetness for Mansha!");
+      triggerConfetti();
     } else if (remedyType === 'flowers') {
-      showToast("💐 A fresh bouquet of blooming roses & peonies delivered!");
-      triggerConfetti(['🌸', '🌹', '🌺', '🌷']);
+      showToast("A fresh bouquet of blooming roses & peonies delivered!");
+      triggerConfetti();
     } else if (remedyType === 'teddy') {
-      showToast("🧸 Cozy plushie comfort dispatched for Mansha!");
-      triggerConfetti(['🧸', '✨', '🌟']);
+      showToast("Cozy plushie comfort dispatched for Mansha!");
+      triggerConfetti();
     } else if (remedyType === 'sun') {
-      showToast("☀️ Warm golden rays beaming down on Mansha!");
-      triggerConfetti(['☀️', '✨', '💛']);
+      showToast("Warm golden sunshine beaming down on Mansha!");
+      triggerConfetti();
     }
   };
 
@@ -309,8 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = document.createElement('div');
     target.className = 'game-target';
     
-    const items = ['💊', '🍋', '💖', '🌸', '🍵', '☀️', '🩹'];
-    target.textContent = items[Math.floor(Math.random() * items.length)];
+    const svgSymbols = [
+      `<svg viewBox="0 0 24 24" width="34" height="34" fill="#ff4d6d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
+      `<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#81c784" stroke-width="2.5"><path d="M10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>`,
+      `<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#ff758f" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
+      `<svg viewBox="0 0 24 24" width="34" height="34" fill="#ffb703"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+      `<svg viewBox="0 0 24 24" width="34" height="34" fill="#a855f7"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+    ];
+    target.innerHTML = svgSymbols[Math.floor(Math.random() * svgSymbols.length)];
 
     const randomX = Math.random() * (gameArea.clientWidth - 50);
     target.style.left = `${randomX}px`;
@@ -321,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Floating score indicator
       const pop = document.createElement('div');
-      pop.textContent = '+10 Boost!';
+      pop.textContent = '+10 Heart Boost!';
       pop.style.position = 'absolute';
       pop.style.left = target.style.left;
       pop.style.top = target.style.top;
@@ -356,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (currentEnergy === 100 && newScore >= 120) {
       clearInterval(gameInterval);
-      showToast("🏆 Mansha's Health Meter is FULL 100%! You are amazing!");
+      showToast("Mansha's Health Meter is FULL 100%! You are amazing!");
       triggerConfetti();
     }
   }
@@ -447,14 +451,15 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSavedWishes();
 
   // UTILITIES: CONFETTI & TOAST
-  function triggerConfetti(emojis = ['✨', '🌸', '🍵', '🩹', '⭐', '🍋']) {
-    for (let i = 0; i < 30; i++) {
+  function triggerConfetti() {
+    const colors = ['#ff4d6d', '#ff758f', '#ff85a2', '#ffb3c6', '#ffccd5', '#ffb703'];
+    for (let i = 0; i < 35; i++) {
       const conf = document.createElement('div');
-      conf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      conf.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
       conf.style.position = 'fixed';
       conf.style.left = `${Math.random() * 100}vw`;
       conf.style.top = '-20px';
-      conf.style.fontSize = `${Math.random() * 1.5 + 1.2}rem`;
       conf.style.zIndex = '3000';
       conf.style.pointerEvents = 'none';
       conf.style.transition = `all ${Math.random() * 2 + 2}s cubic-bezier(0.25, 1, 0.5, 1)`;
@@ -529,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (timerHours) timerHours.textContent = '00';
       if (timerMinutes) timerMinutes.textContent = '00';
       if (timerSeconds) timerSeconds.textContent = '00';
-      if (targetDateDisplay) targetDateDisplay.textContent = "100% Fully Recovered! 🎉";
+      if (targetDateDisplay) targetDateDisplay.textContent = "100% Fully Recovered!";
       return;
     }
 
@@ -556,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
           recoveryTargetDate = newDate;
           localStorage.setItem('mansha_target_date', newDate.toISOString());
           updateCountdown();
-          showToast("📅 Recovery Target Date updated!");
+          showToast("Recovery Target Date updated!");
         } else {
           alert("Invalid date format. Please use YYYY-MM-DD.");
         }
