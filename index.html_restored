@@ -55,13 +55,10 @@
       <svg class="ecg-line" viewBox="0 0 200 40">
         <path d="M0,20 L30,20 L35,10 L40,30 L45,5 L50,35 L55,20 L90,20 L95,12 L100,28 L105,8 L110,32 L115,20 L160,20 L165,14 L170,26 L175,20 L200,20" />
       </svg>
-      <span class="ecg-label">Care Space by Arsalan 🌸</span>
+      <span class="ecg-label">Rest Mode Active 💤</span>
     </div>
 
     <div class="nav-controls">
-      <a href="https://wa.me/919906730051?text=Hey!%20Let's%20talk%20🌸" target="_blank" class="pill-btn whatsapp-header-btn">
-        <span class="btn-heart">💬</span> WhatsApp Arsalan
-      </a>
       <button id="sound-toggle-btn" class="icon-btn" aria-label="Toggle soothing ambient music" title="Play soothing background sound">
         <span class="sound-icon">🎵</span>
         <span class="sound-text">Ambient Sound</span>
@@ -84,69 +81,26 @@
         </div>
 
         <h1 class="hero-title">
-          Dear <span class="gradient-name">Mansha</span>, Yesterday You Told Me You Were Crying... Please Don't Cry! 🌸
+          Get Well Soon, <span class="gradient-name">Mansha!</span>
         </h1>
 
         <p class="hero-subtitle">
-          A cold is temporary, pimples fade fast, but your beauty & radiant smile are forever! Arsalan has prepared this custom recovery sanctuary just for you. Rest up, sip hot lemon tea, and turn those tears into smiles! ✨
+          Sending you endless sunshine, cozy comfort, warm tea, and a gentle reminder to take all the time you need. Rest up, take it easy, and let your body heal! 🌸✨
         </p>
 
-        <div class="hero-vector-frame">
-          <svg class="hero-vector-art" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="teaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff758f"/>
-                <stop offset="100%" stop-color="#ff4d6d"/>
-              </linearGradient>
-              <linearGradient id="cupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="100%" stop-color="#fff0f3"/>
-              </linearGradient>
-              <filter id="vectorGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#ff758f" flood-opacity="0.3"/>
-              </filter>
-            </defs>
-            
-            <circle cx="250" cy="150" r="110" fill="url(#teaGrad)" opacity="0.08"/>
-            <circle cx="250" cy="150" r="85" fill="#ffffff" opacity="0.95" filter="url(#vectorGlow)"/>
-
-            <path class="steam-line path-1" d="M230,110 Q220,80 235,60 Q245,40 235,25" fill="none" stroke="#ff8fa3" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-            <path class="steam-line path-2" d="M250,105 Q265,75 250,55 Q240,35 255,20" fill="none" stroke="#ff8fa3" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
-            <path class="steam-line path-3" d="M270,110 Q280,80 265,60 Q255,40 270,25" fill="none" stroke="#ff8fa3" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-
-            <ellipse cx="250" cy="205" rx="75" ry="14" fill="#ffe5ec" stroke="#ffccd5" stroke-width="2"/>
-            <path d="M190,135 C190,195 310,195 310,135 Z" fill="url(#cupGrad)" stroke="#ffccd5" stroke-width="2.5"/>
-            <path d="M308,145 C328,145 328,178 306,178" fill="none" stroke="#ff8fa3" stroke-width="5" stroke-linecap="round"/>
-            <ellipse cx="250" cy="135" rx="60" ry="10" fill="#fff0f3" stroke="#ffccd5" stroke-width="2"/>
-            <ellipse cx="250" cy="137" rx="53" ry="7" fill="#ffb703" opacity="0.85"/>
-
-            <g transform="translate(140, 160)">
-              <path d="M0,0 C-15,-25 15,-35 0,-8 C-8,-40 25,-25 0,0" fill="#ff758f" opacity="0.9"/>
-              <circle cx="0" cy="-10" r="4" fill="#ffb703"/>
-            </g>
-
-            <g transform="translate(360, 160)">
-              <path d="M0,0 C15,-25 -15,-35 0,-8 C8,-40 -25,-25 0,0" fill="#ff758f" opacity="0.9"/>
-              <circle cx="0" cy="-10" r="4" fill="#ffb703"/>
-            </g>
-
-            <path d="M165,80 L168,88 L176,91 L168,94 L165,102 L162,94 L154,91 L162,88 Z" fill="#ffb703"/>
-            <path d="M335,75 L337,81 L343,83 L337,85 L335,91 L333,85 L327,83 L333,81 Z" fill="#ff758f"/>
-          </svg>
+        <div class="hero-image-frame">
+          <img src="assets/hero.jpg" alt="Get Well Soon Warm Illustration for Mansha" class="hero-img">
+          <div class="image-overlay-glow"></div>
         </div>
 
         <div class="hero-actions">
-          <a href="https://wa.me/919906730051?text=Hey!%20Let's%20talk%20🌸" target="_blank" class="whatsapp-hero-btn pulse-glow-wa">
-            <span class="btn-icon">💬</span>
-            <span class="btn-text">Text Arsalan on WhatsApp 💬 (+91 9906730051)</span>
-          </a>
           <button id="hug-main-btn" class="primary-btn pulse-glow">
             <span class="btn-icon">✨</span>
-            <span class="btn-text">Turn Tears to Smiles! 😊</span>
+            <span class="btn-text">Send Healing Energy!</span>
           </button>
           <a href="#prescription" class="secondary-btn">
             <span class="btn-icon">📋</span>
-            <span class="btn-text">View Dr. Arsalan's Cold & Skin Rx</span>
+            <span class="btn-text">View Your Doctor's Rx</span>
           </a>
         </div>
       </div>
@@ -278,35 +232,35 @@
               <label class="custom-checkbox">
                 <input type="checkbox" id="chk-1">
                 <span class="checkmark"></span>
-                <span class="item-text"><strong>Sip hot lemon honey tea & inhale warm steam</strong> 🍵 (Clears cold & opens sinuses!)</span>
+                <span class="item-text"><strong>Drink warm water or soothing chamomile tea</strong> 🍵 (Hydration is key!)</span>
               </label>
             </li>
             <li class="checklist-item" data-id="2">
               <label class="custom-checkbox">
                 <input type="checkbox" id="chk-2">
                 <span class="checkmark"></span>
-                <span class="item-text"><strong>No crying allowed! You are 100% beautiful</strong> 🌸 (Pimples during a cold are just immune flare-ups, they fade fast!)</span>
+                <span class="item-text"><strong>Zero stressful thoughts allowed!</strong> 🚫🧠 (Only calm and peaceful thoughts)</span>
               </label>
             </li>
             <li class="checklist-item" data-id="3">
               <label class="custom-checkbox">
                 <input type="checkbox" id="chk-3">
                 <span class="checkmark"></span>
-                <span class="item-text"><strong>Watch your favorite cozy comfort movie under warm blankets</strong> 🎬📖</span>
+                <span class="item-text"><strong>Watch your favorite cozy movie or read a lovely book</strong> 🎬📖</span>
               </label>
             </li>
             <li class="checklist-item" data-id="4">
               <label class="custom-checkbox">
                 <input type="checkbox" id="chk-4">
                 <span class="checkmark"></span>
-                <span class="item-text"><strong>Take deep relaxing breaths & extra nap time</strong> 💤</span>
+                <span class="item-text"><strong>Take deep, relaxing breaths & extra nap time</strong> 💤</span>
               </label>
             </li>
             <li class="checklist-item" data-id="5">
               <label class="custom-checkbox">
                 <input type="checkbox" id="chk-5">
                 <span class="checkmark"></span>
-                <span class="item-text"><strong>Remember Arsalan & everyone are rooting for your fast recovery!</strong> 🌟</span>
+                <span class="item-text"><strong>Remember that everyone is rooting for your fast recovery!</strong> 🌟</span>
               </label>
             </li>
           </ul>
@@ -412,40 +366,63 @@
       </div>
     </section>
 
-    <!-- DOCTOR ARSALAN'S SKIN & COLD REASSURANCE NOTE -->
-    <section class="radiance-section" id="radiance-note">
-      <div class="radiance-card glass-panel">
-        <div class="radiance-header">
-          <span class="radiance-badge">✨ SPECIAL MEDICAL NOTE FOR MANSHA</span>
-          <h2>Why Pimples Happen During a Cold & Why You're Still 100% Gorgeous! 🌸</h2>
-        </div>
-        <div class="radiance-body">
-          <p class="radiance-quote">
-            "Mansha, when your body works hard to clear a cold, immune activity increases and skin sensitivity briefly flares up. A pimple during a cold is just proof your body is fighting hard! It clears in a few days, but your true beauty and bright smile are forever. No more crying — Arsalan & everyone are surrounding you with warm hugs!" 💖
-          </p>
-          <div class="radiance-meters">
-            <div class="meter-chip">
-              <span class="meter-icon">🌸</span>
-              <div>
-                <strong>Beauty Index</strong>
-                <small>100% Radiant & Gorgeous</small>
-              </div>
-            </div>
-            <div class="meter-chip">
-              <span class="meter-icon">🍵</span>
-              <div>
-                <strong>Sinus Relief</strong>
-                <small>Hot Lemon Tea Active</small>
-              </div>
-            </div>
-            <div class="meter-chip">
-              <span class="meter-icon">😊</span>
-              <div>
-                <strong>Smile Shield</strong>
-                <small>Tears Turned to Joy</small>
-              </div>
-            </div>
+    <!-- WALL OF WARM WISHES FOR MANSHA -->
+    <section class="wishes-section" id="wishes">
+      <div class="section-header">
+        <h2 class="section-title">💌 Messages & Warm Wishes for Mansha</h2>
+        <p class="section-desc">Heartfelt words to bring a big bright smile to Mansha's face</p>
+      </div>
+
+      <!-- Add Wish Form -->
+      <div class="add-wish-card glass-panel">
+        <h3>Pin a Wishing Note for Mansha ✨</h3>
+        <form id="wish-form">
+          <div class="form-row">
+            <input type="text" id="sender-name" placeholder="Your Name or Nickname" required maxlength="30">
+            <select id="wish-emoji">
+              <option value="✨">✨ Warm Care & Cheer</option>
+              <option value="🌸">🌸 Flower Power</option>
+              <option value="🍵">🍵 Warm Comfort</option>
+              <option value="⭐">⭐ Sparkle & Shine</option>
+              <option value="🧸">🧸 Cozy Comfort</option>
+              <option value="💊">💊 Speedy Healing</option>
+            </select>
           </div>
+          <div class="form-row">
+            <textarea id="wish-message" placeholder="Write your warm message to Mansha here..." required maxlength="250" rows="3"></textarea>
+          </div>
+          <button type="submit" class="primary-btn">Pin Note to Board 📌</button>
+        </form>
+      </div>
+
+      <!-- Wishes Grid -->
+      <div class="wishes-grid" id="wishes-container">
+        <!-- Default Preloaded Wishes -->
+        <div class="wish-card glass-panel color-1">
+          <div class="wish-card-header">
+            <span class="wish-sender">From your Besties</span>
+            <span class="wish-emoji">🌟</span>
+          </div>
+          <p class="wish-text">"Dear Mansha, we miss your laugh and bright energy so much! Please rest well, eat good food, and recover soon! Can't wait to hang out!"</p>
+          <span class="wish-date">Today</span>
+        </div>
+
+        <div class="wish-card glass-panel color-2">
+          <div class="wish-card-header">
+            <span class="wish-sender">Sunshine Squad</span>
+            <span class="wish-emoji">🌸</span>
+          </div>
+          <p class="wish-text">"Sending you a garden full of healing flowers! May every day bring you more strength, comfort, and peaceful sleep. Get well soon Mansha!"</p>
+          <span class="wish-date">Today</span>
+        </div>
+
+        <div class="wish-card glass-panel color-3">
+          <div class="wish-card-header">
+            <span class="wish-sender">Team Cozy</span>
+            <span class="wish-emoji">🍵</span>
+          </div>
+          <p class="wish-text">"Here is an official order for unlimited hot tea, cozy blankets, and warm socks. You'll be back on your feet glowing in no time!"</p>
+          <span class="wish-date">Today</span>
         </div>
       </div>
     </section>
@@ -470,8 +447,8 @@
         <div class="hug-animation-box">
           <span class="big-hug-emoji">✨🌸🌟</span>
         </div>
-        <h2>Healing Energy & Warm Hugs Sent to Mansha!</h2>
-        <p>Sending hot lemon honey tea, cozy steam warmth, and a reminder: pimples fade fast, your cold will clear soon, and you are 100% beautiful every single day! Rest up, no more tears, and smile! 😊</p>
+        <h2>Healing Energy Sent to Mansha!</h2>
+        <p>A double dose of warm cheer and bright recovery energy has been sent your way! Rest well, stay hydrated, and get back on your feet soon!</p>
         <button onclick="closeModal()" class="primary-btn">Thank You! 😊</button>
       </div>
     </div>
@@ -499,17 +476,11 @@
       <span class="dock-icon">🎮</span>
       <span class="dock-label">Game</span>
     </a>
-    <a href="#radiance-note" class="dock-item">
-      <span class="dock-icon">🌸</span>
-      <span class="dock-label">Radiance</span>
+    <a href="#wishes" class="dock-item">
+      <span class="dock-icon">💌</span>
+      <span class="dock-label">Wishes</span>
     </a>
   </nav>
-
-  <!-- FLOATING STICKY WHATSAPP QUICK BUTTON -->
-  <a href="https://wa.me/919906730051?text=Hey!%20Let's%20talk%20🌸" target="_blank" class="floating-wa-btn" title="Chat with Arsalan on WhatsApp">
-    <span class="wa-fab-icon">💬</span>
-    <span class="wa-fab-text">Chat Arsalan</span>
-  </a>
 
   <!-- JavaScript Script Link -->
   <script src="script.js"></script>

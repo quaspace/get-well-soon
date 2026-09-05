@@ -394,29 +394,13 @@ document.addEventListener('DOMContentLoaded', () => {
     card.innerHTML = `
       <div class="wish-card-header">
         <span class="wish-sender">From ${escapeHtml(wish.sender)}</span>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="wish-emoji">${wish.emoji}</span>
-          <button class="delete-wish-btn" title="Delete note" style="background: rgba(255,77,109,0.15); border: none; color: #ff4d6d; width: 22px; height: 22px; border-radius: 50%; font-size: 0.9rem; cursor: pointer;">&times;</button>
-        </div>
+        <span class="wish-emoji">${wish.emoji}</span>
       </div>
       <p class="wish-text">"${escapeHtml(wish.message)}"</p>
       <span class="wish-date">${wish.date}</span>
     `;
 
-    card.querySelector('.delete-wish-btn').addEventListener('click', () => {
-      card.remove();
-      deleteWishFromStorage(wish);
-      toggleEmptyState();
-    });
-
-    const emptyMsg = document.getElementById('no-wishes-msg');
-    if (emptyMsg && emptyMsg.parentNode === wishesContainer) {
-      wishesContainer.insertBefore(card, emptyMsg);
-    } else {
-      wishesContainer.prepend(card);
-    }
-
-    toggleEmptyState();
+    wishesContainer.prepend(card);
   }
 
   function saveWishToStorage(wish) {
@@ -425,23 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mansha_wishes', JSON.stringify(saved));
   }
 
-  function deleteWishFromStorage(wish) {
-    let saved = JSON.parse(localStorage.getItem('mansha_wishes') || '[]');
-    saved = saved.filter(w => !(w.sender === wish.sender && w.message === wish.message));
-    localStorage.setItem('mansha_wishes', JSON.stringify(saved));
-  }
-
-  function toggleEmptyState() {
-    const emptyMsg = document.getElementById('no-wishes-msg');
-    if (!emptyMsg) return;
-    const cards = wishesContainer ? wishesContainer.querySelectorAll('.wish-card') : [];
-    emptyMsg.style.display = cards.length === 0 ? 'block' : 'none';
-  }
-
   function loadSavedWishes() {
     const saved = JSON.parse(localStorage.getItem('mansha_wishes') || '[]');
     saved.forEach(addWishCard);
-    toggleEmptyState();
   }
 
   loadSavedWishes();
