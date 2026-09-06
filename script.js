@@ -8,24 +8,43 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. SCROLL MOTION & PARALLAX HEALTH ICONS CONTROLLER
   const parallaxIcons = document.querySelectorAll('.parallax-icon');
   let lastScrollY = window.scrollY;
+  let targetScrollY = window.scrollY;
+  let currentScrollY = window.scrollY;
+  let parallaxRafId = null;
+
+  // Passive scroll listener — just stores the target, no work done here
+  window.addEventListener('scroll', () => {
+    targetScrollY = window.scrollY;
+    if (!parallaxRafId) {
+      parallaxRafId = requestAnimationFrame(updateParallax);
+    }
+  }, { passive: true });
 
   function updateParallax() {
-    const scrollY = window.scrollY;
+    const diff = targetScrollY - currentScrollY;
 
-    parallaxIcons.forEach((icon) => {
-      const speed = parseFloat(icon.getAttribute('data-speed')) || 0.2;
-      const translateY = scrollY * speed;
-      const rotate = (scrollY * speed * 0.15) % 360;
-      
-      icon.style.transform = `translate3d(0, ${translateY}px, 0) rotate(${rotate}deg)`;
-    });
+    if (Math.abs(diff) > 0.1) {
+      // Lerp toward target
+      currentScrollY += diff * 0.12;
 
-    lastScrollY = scrollY;
-    requestAnimationFrame(updateParallax);
+      parallaxIcons.forEach((icon) => {
+        const speed = parseFloat(icon.getAttribute('data-speed')) || 0.2;
+        const translateY = currentScrollY * speed;
+        const rotate = (currentScrollY * speed * 0.15) % 360;
+        icon.style.transform = `translate3d(0, ${translateY}px, 0) rotate(${rotate}deg)`;
+      });
+
+      // Keep scroll influence consistent for canvas particles
+      lastScrollY = currentScrollY;
+
+      parallaxRafId = requestAnimationFrame(updateParallax);
+    } else {
+      // Close enough — snap and stop looping
+      currentScrollY = targetScrollY;
+      lastScrollY = currentScrollY;
+      parallaxRafId = null;
+    }
   }
-  
-  // Start parallax loop
-  requestAnimationFrame(updateParallax);
 
   // 2. DYNAMIC HEALTH CANVAS BACKGROUND PARTICLES
   const canvas = document.getElementById('health-canvas');
@@ -40,7 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticles();
   }
 
-  window.addEventListener('resize', resizeCanvas);
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeCanvas, 200);
+  });
   window.addEventListener('mousemove', (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
@@ -260,23 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hugQuickBtn) hugQuickBtn.addEventListener('click', openHugModal);
   if (modalClose) modalClose.addEventListener('click', closeModal);
 
-  // 6. REMEDY PICKER HANDLER
-  window.triggerRemedy = function(remedyType) {
-    if (remedyType === 'tea') {
-      showToast("Warm Lemon Honey Tea served with extra sweetness for Mansha!");
-      triggerConfetti();
-    } else if (remedyType === 'flowers') {
-      showToast("A fresh bouquet of blooming roses & peonies delivered!");
-      triggerConfetti();
-    } else if (remedyType === 'teddy') {
-      showToast("Cozy plushie comfort dispatched for Mansha!");
-      triggerConfetti();
-    } else if (remedyType === 'sun') {
-      showToast("Warm golden sunshine beaming down on Mansha!");
-      triggerConfetti();
-    }
-  };
-
   // 7. MINI BOOSTER GAME HANDLER
   const startGameBtn = document.getElementById('start-game-btn');
   const gameOverlay = document.getElementById('game-start-overlay');
@@ -287,6 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let score = 0;
   let gameInterval = null;
+  let currentIntervalMs = 800; // Tracks active spawn interval so thresholds are only applied once
 
   if (startGameBtn) {
     startGameBtn.addEventListener('click', startGame);
@@ -295,10 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     if (gameOverlay) gameOverlay.style.display = 'none';
     score = 0;
+    currentIntervalMs = 800;
     updateScore(0);
     
     if (gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(spawnTarget, 800);
+    gameInterval = setInterval(spawnTarget, currentIntervalMs);
   }
 
   function spawnTarget() {
@@ -358,8 +366,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (energyBar) energyBar.style.width = `${currentEnergy}%`;
     if (energyCounter) energyCounter.textContent = `${currentEnergy}%`;
 
+    // Difficulty scaling — only escalate when threshold is first crossed
+    if (newScore >= 100 && gameInterval && currentIntervalMs !== 400) {
+      currentIntervalMs = 400;
+      clearInterval(gameInterval);
+      gameInterval = setInterval(spawnTarget, currentIntervalMs);
+    } else if (newScore >= 50 && newScore < 100 && gameInterval && currentIntervalMs !== 600) {
+      currentIntervalMs = 600;
+      clearInterval(gameInterval);
+      gameInterval = setInterval(spawnTarget, currentIntervalMs);
+    }
+
     if (currentEnergy === 100 && newScore >= 120) {
       clearInterval(gameInterval);
+      gameInterval = null;
       showToast("Mansha's Health Meter is FULL 100%! You are amazing!");
       triggerConfetti();
     }
@@ -450,40 +470,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadSavedWishes();
 
+  // Section reveal observer
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('section').forEach(sec => {
+    sec.classList.add('section-reveal');
+    revealObserver.observe(sec);
+  });
+
+  // Quranic section ambient glow boost
+  const quranObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('quranic-in-view', entry.isIntersecting);
+    });
+  }, { threshold: 0.2 });
+  const quranSection = document.getElementById('quranic-healing');
+  if (quranSection) quranObserver.observe(quranSection);
+
+
   // UTILITIES: CONFETTI & TOAST
   function triggerConfetti() {
     const colors = ['#ff4d6d', '#ff758f', '#ff85a2', '#ffb3c6', '#ffccd5', '#ffb703'];
     for (let i = 0; i < 35; i++) {
-      const conf = document.createElement('div');
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      conf.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-      conf.style.position = 'fixed';
-      conf.style.left = `${Math.random() * 100}vw`;
-      conf.style.top = '-20px';
-      conf.style.zIndex = '3000';
-      conf.style.pointerEvents = 'none';
-      conf.style.transition = `all ${Math.random() * 2 + 2}s cubic-bezier(0.25, 1, 0.5, 1)`;
-
-      document.body.appendChild(conf);
-
       setTimeout(() => {
-        conf.style.transform = `translateY(105vh) rotate(${Math.random() * 720 - 360}deg)`;
-        conf.style.opacity = '0';
-      }, 50);
+        const conf = document.createElement('div');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const useHeart = Math.random() < 0.5;
+        if (useHeart) {
+          conf.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+        } else {
+          conf.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+        }
+        conf.style.position = 'fixed';
+        conf.style.left = `${Math.random() * 100}vw`;
+        conf.style.top = '-20px';
+        conf.style.zIndex = '3000';
+        conf.style.pointerEvents = 'none';
+        conf.style.transition = `all ${Math.random() * 2 + 2}s cubic-bezier(0.25, 1, 0.5, 1)`;
 
-      setTimeout(() => conf.remove(), 4000);
+        document.body.appendChild(conf);
+
+        setTimeout(() => {
+          conf.style.transform = `translateY(105vh) rotate(${Math.random() * 720 - 360}deg)`;
+          conf.style.opacity = '0';
+        }, 50);
+
+        setTimeout(() => conf.remove(), 4000);
+      }, i * 35);
     }
   }
 
-  function showToast(msg) {
+  function showToast(msg, emoji = '✨') {
     const toast = document.createElement('div');
-    toast.textContent = msg;
+    toast.textContent = emoji + ' ' + msg;
     toast.style.position = 'fixed';
     toast.style.bottom = '30px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%) translateY(50px)';
-    toast.style.background = '#2b2d42';
-    toast.style.color = '#ffffff';
+    toast.style.background = 'linear-gradient(135deg, #0e2619 0%, #1a3f2a 100%)';
+    toast.style.color = '#ffe57f';
+    toast.style.border = '1.5px solid rgba(255,215,0,0.5)';
     toast.style.padding = '14px 28px';
     toast.style.borderRadius = '50px';
     toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
@@ -590,6 +642,217 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Dock smooth scroll — override default anchor jump with smooth scrollIntoView
+  dockItems.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  });
+
+  // 11. MANSHA REPEAT VISIT TRACKER & SPECIAL SURPRISE MODAL
+  const visitBadge = document.getElementById('mansha-visit-badge');
+  const visitCounterText = document.getElementById('visit-counter-text');
+  const repeatWatchBanner = document.getElementById('repeat-watch-banner');
+  const repeatWatchText = document.getElementById('repeat-watch-text');
+  const repeatModal = document.getElementById('repeat-visit-modal');
+  const repeatModalCount = document.getElementById('repeat-modal-count');
+  const repeatModalClose = document.getElementById('repeat-modal-close');
+  const repeatModalBtn = document.getElementById('repeat-modal-btn');
+
+  // Read and increment visit counter (preset starting count to 8 so Mansha immediately sees her milestone)
+  let visitCount = parseInt(localStorage.getItem('mansha_visit_count'), 10);
+  if (isNaN(visitCount) || visitCount < 8) {
+    visitCount = 8; // She already watched 8-9 times!
+  } else {
+    visitCount += 1;
+  }
+  localStorage.setItem('mansha_visit_count', visitCount);
+
+  // Update UI with visit count
+  if (visitBadge && visitCounterText) {
+    visitBadge.style.display = 'inline-flex';
+    visitCounterText.textContent = `Mansha's Visit #${visitCount} ✨`;
+  }
+
+  if (repeatWatchBanner && repeatWatchText) {
+    repeatWatchBanner.style.display = 'flex';
+    repeatWatchText.innerHTML = `Mansha, you've watched this <strong>${visitCount} times</strong>! Each visit sends extra healing energy & love from Arsalan!`;
+  }
+
+  // Auto-trigger the special VIP surprise modal once per session
+  const modalShownSession = sessionStorage.getItem('mansha_repeat_modal_shown');
+  if (!modalShownSession && repeatModal) {
+    setTimeout(() => {
+      if (repeatModalCount) {
+        repeatModalCount.textContent = `${visitCount} times`;
+      }
+      repeatModal.classList.add('active');
+      sessionStorage.setItem('mansha_repeat_modal_shown', 'true');
+      triggerConfetti();
+    }, 1200);
+  }
+
+  function closeRepeatModal() {
+    if (repeatModal) {
+      repeatModal.classList.remove('active');
+    }
+  }
+
+  if (repeatModalClose) repeatModalClose.addEventListener('click', closeRepeatModal);
+  if (repeatModalBtn) {
+    repeatModalBtn.addEventListener('click', () => {
+      closeRepeatModal();
+      showToast("💖 Arsalan: 'You are so welcome Mansha! Keep smiling!'", "💌");
+      triggerConfetti();
+    });
+  }
+
+  // 12. BEHIND THE SCENES: DUAL-LENS SWITCHER & 3D HOLOGRAPHIC SEAL CONTROLLER
+  window.switchLens = function(lens) {
+    const tabSoul = document.getElementById('tab-soul');
+    const tabCode = document.getElementById('tab-code');
+    const viewSoul = document.getElementById('view-soul');
+    const viewCode = document.getElementById('view-code');
+
+    if (lens === 'soul') {
+      if (tabSoul) tabSoul.classList.add('active');
+      if (tabCode) tabCode.classList.remove('active');
+      if (viewSoul) viewSoul.classList.add('active');
+      if (viewCode) viewCode.classList.remove('active');
+    } else {
+      if (tabCode) tabCode.classList.add('active');
+      if (tabSoul) tabSoul.classList.remove('active');
+      if (viewCode) viewCode.classList.add('active');
+      if (viewSoul) viewSoul.classList.remove('active');
+    }
+  };
+
+  // 3D Hologram Seal Card Flip
+  const holoCard = document.getElementById('holo-seal-card');
+  const holoInner = document.getElementById('holo-card-inner');
+
+  if (holoCard && holoInner) {
+    holoCard.addEventListener('click', (e) => {
+      // Don't flip back immediately if clicking the button
+      if (e.target.closest('#smile-back-btn')) return;
+      holoInner.classList.toggle('is-flipped');
+    });
+
+    // 3D Parallax Tilt on Mouse Move (Desktop)
+    holoCard.addEventListener('mousemove', (e) => {
+      const rect = holoCard.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const isFlipped = holoInner.classList.contains('is-flipped');
+      const flipY = isFlipped ? 180 : 0;
+      holoInner.style.transform = `rotateY(${flipY + x * 0.08}deg) rotateX(${-y * 0.08}deg)`;
+    });
+
+    holoCard.addEventListener('mouseleave', () => {
+      const isFlipped = holoInner.classList.contains('is-flipped');
+      holoInner.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    });
+  }
+
+  // Smile Back Confetti Button inside Seal
+  window.sendSmileBack = function(e) {
+    e.stopPropagation();
+    showToast("💖 Mansha's smile sent to Arsalan! Warm hug received!", "🌸");
+    triggerConfetti();
+  };
+
+  // Interactive Comfort Pills & Floating Comfort Orbs Handler
+  window.handleComfortPill = function(type) {
+    if (type === 'lemon') {
+      const rxSec = document.getElementById('prescription');
+      if (rxSec) rxSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast("Steaming Hot Honey Lemon with ginger brewed for Mansha! Soothes the throat instantly!", "🍵");
+      triggerConfetti();
+    } else if (type === 'glow') {
+      const radSec = document.getElementById('radiance-note');
+      if (radSec) radSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast("Gentle reminder: Mansha, your beauty & radiant smile are eternal. Pimples fade in days!", "🌸");
+      triggerConfetti();
+    } else if (type === 'hug') {
+      showToast("Sending Mansha the biggest, warmest, coziest hug from Arsalan! Turn tears into smiles!", "🧸");
+      triggerConfetti();
+      const heroCard = document.querySelector('.hero-glass-card');
+      if (heroCard) {
+        heroCard.style.transform = 'scale(1.025)';
+        heroCard.style.boxShadow = '0 32px 85px rgba(255, 77, 109, 0.45), 0 0 35px rgba(255, 183, 3, 0.4)';
+        setTimeout(() => {
+          heroCard.style.transform = '';
+          heroCard.style.boxShadow = '';
+        }, 600);
+      }
+    } else if (type === 'rx') {
+      const rxSec = document.getElementById('prescription');
+      if (rxSec) rxSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast("Dr. Arsalan's Comfort Rx: Hot lemon tea, warm soup, chamomile & zero worries!", "📖");
+      triggerConfetti();
+    }
+  };
+
+  document.querySelectorAll('.comfort-pill-chip, .hero-float-orb').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const comfort = el.getAttribute('data-comfort');
+      if (comfort && window.handleComfortPill) {
+        window.handleComfortPill(comfort);
+      }
+    });
+  });
+
+  // 3D Parallax Tilt & Specular Glare on Hero Glass Card (Desktop)
+  const heroCardElement = document.querySelector('.hero-glass-card');
+  if (heroCardElement && window.matchMedia('(pointer: fine)').matches) {
+    heroCardElement.addEventListener('mousemove', (e) => {
+      const rect = heroCardElement.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -3.5;
+      const rotateY = ((x - centerX) / centerX) * 3.5;
+      
+      heroCardElement.style.setProperty('--card-mouse-x', `${(x / rect.width) * 100}%`);
+      heroCardElement.style.setProperty('--card-mouse-y', `${(y / rect.height) * 100}%`);
+      heroCardElement.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(0, -4px, 0)`;
+    });
+
+    heroCardElement.addEventListener('mouseleave', () => {
+      heroCardElement.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+    });
+  }
+
+  // Hero Alchemy Pill Smooth Scroll & Highlight
+  const alchemyTrigger = document.getElementById('alchemy-pill-trigger');
+  if (alchemyTrigger) {
+    alchemyTrigger.addEventListener('click', () => {
+      const btsSec = document.getElementById('behind-the-scenes');
+      if (btsSec) {
+        btsSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast("✨ Welcome to Behind The Scenes by Arsalan!", "⚡");
+      }
+    });
+  }
+
+  // Dismiss Mobile PC Reminder Note
+  window.dismissMobileNotice = function() {
+    const pcNotice = document.getElementById('mobile-pc-notice');
+    if (pcNotice) {
+      pcNotice.style.setProperty('display', 'none', 'important');
+      showToast("Enjoy Mansha's healing sanctuary on mobile! 🌸", "📱");
+    }
+  };
 
   function escapeHtml(str) {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
