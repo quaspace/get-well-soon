@@ -1,3 +1,15 @@
+/* MODERN PERFORMANCE: Defer off-screen section layout and paint */
+.dashboard-section,
+.countdown-section,
+.prescription-section,
+.game-section,
+.radiance-section,
+.quranic-healing-section,
+.bts-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
+}
+
 /* ==========================================================================
    MANSHA GET WELL SOON - STYLESHEET
    Design System: Soft Rose Gold, Mint, Glassmorphic Warmth & Dynamic Motion
@@ -91,7 +103,6 @@ body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  will-change: transform;
 }
 
 /* Parallax Floating SVG Health Icons (Hardware Accelerated) */
@@ -100,7 +111,6 @@ body {
   pointer-events: none;
   opacity: 0.55;
   filter: drop-shadow(0 8px 18px rgba(255, 117, 143, 0.3));
-  will-change: transform, opacity, filter;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   transition: transform 0.15s linear, opacity 0.4s ease, filter 0.4s ease;
@@ -168,8 +178,8 @@ body {
 /* Glassmorphism Panel Shared Style & 3D Card Hover Motion */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--radius-lg);
@@ -179,7 +189,6 @@ body {
               border-color 0.4s ease;
   position: relative;
   overflow: hidden;
-  will-change: transform, box-shadow;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
@@ -218,8 +227,8 @@ body {
   width: 100%;
   height: 70px;
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.75);
   display: flex;
   align-items: center;
@@ -325,8 +334,8 @@ body {
   stroke-linejoin: round;
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
+  filter: drop-shadow(0 0 5px rgba(255, 117, 143, 0.6));
   animation: ecgDashTrail 2.2s linear infinite, ecgGlowPulse 1.8s ease-in-out infinite alternate;
-  will-change: stroke-dashoffset, filter;
 }
 
 @keyframes ecgDashTrail {
@@ -335,9 +344,9 @@ body {
 }
 
 @keyframes ecgGlowPulse {
-  0% { stroke: #ff758f; filter: drop-shadow(0 0 4px rgba(255, 117, 143, 0.6)); }
-  50% { stroke: #ff4d6d; filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.95)) drop-shadow(0 0 20px rgba(255, 117, 143, 0.8)); }
-  100% { stroke: #ff8fa3; filter: drop-shadow(0 0 6px rgba(255, 117, 143, 0.7)); }
+  0% { opacity: 0.65; }
+  50% { opacity: 1; }
+  100% { opacity: 0.75; }
 }
 
 .ecg-label {
@@ -374,7 +383,6 @@ body {
               background 0.3s ease,
               border-color 0.3s ease,
               box-shadow 0.3s ease;
-  will-change: transform, box-shadow;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
@@ -413,7 +421,6 @@ body {
               background 0.3s ease;
   position: relative;
   overflow: hidden;
-  will-change: transform, box-shadow;
 }
 
 .pill-btn::after {
@@ -475,27 +482,22 @@ body {
 /* Cascading Hardware-Accelerated Hero Entry Sequence */
 .hero-badge-row {
   animation: heroItemCascade 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
-  will-change: transform, opacity;
 }
 
 .creator-sincere-badge {
   animation: heroItemCascade 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
-  will-change: transform, opacity, box-shadow;
 }
 
 .hero-title {
   animation: heroItemCascade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
-  will-change: transform, opacity;
 }
 
 .hero-subtitle {
   animation: heroItemCascade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
-  will-change: transform, opacity;
 }
 
 .hero-actions {
   animation: heroItemCascade 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-  will-change: transform, opacity;
 }
 
 @keyframes heroItemCascade {
@@ -511,8 +513,8 @@ body {
 
 .hero-glass-card {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 240, 244, 0.8) 45%, rgba(255, 230, 238, 0.88) 100%);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1.5px solid rgba(255, 205, 218, 0.85);
   box-shadow: 
     0 24px 60px -12px rgba(255, 117, 143, 0.22),
@@ -528,7 +530,6 @@ body {
   transform-style: preserve-3d;
   transform: translate3d(0, 0, 0);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-  will-change: transform, box-shadow;
 }
 
 .hero-glass-card::before {
@@ -576,8 +577,8 @@ body {
   align-items: center;
   gap: 7px;
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 8px 16px;
   border-radius: var(--radius-pill);
   border: 1.5px solid rgba(255, 183, 195, 0.7);
@@ -803,7 +804,6 @@ body {
               background 0.25s ease,
               border-color 0.25s ease,
               color 0.25s ease;
-  will-change: transform, box-shadow;
   position: relative;
   overflow: hidden;
 }
@@ -864,7 +864,6 @@ body {
   border: 4px solid white;
   position: relative;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
-  will-change: transform, box-shadow;
 }
 
 .hero-image-frame::after {
@@ -894,7 +893,6 @@ body {
   height: auto;
   display: block;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
-  will-change: transform;
 }
 
 .hero-image-frame:hover .hero-img {
@@ -928,7 +926,6 @@ body {
               background 0.35s ease;
   position: relative;
   overflow: hidden;
-  will-change: transform, box-shadow;
 }
 
 .primary-btn::after {
@@ -1000,7 +997,6 @@ body {
               background 0.35s ease,
               border-color 0.35s ease,
               box-shadow 0.35s ease;
-  will-change: transform, box-shadow;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
@@ -1065,7 +1061,6 @@ body {
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
 }
 
 .stat-card:hover {
@@ -1261,7 +1256,6 @@ body {
               background 0.3s ease,
               border-color 0.3s ease,
               box-shadow 0.3s ease;
-  will-change: transform;
 }
 
 .custom-checkbox:hover {
@@ -1487,7 +1481,6 @@ body {
   transition: transform 0.2s var(--transition-spring), filter 0.2s ease;
   animation: fallTargetPhysics 3.5s linear infinite;
   filter: drop-shadow(0 6px 12px rgba(255, 117, 143, 0.35));
-  will-change: transform, top;
 }
 
 .game-target:hover {
@@ -1578,7 +1571,6 @@ body {
   border-left: 6px solid var(--primary);
   transition: transform 0.4s var(--transition-spring),
               box-shadow 0.4s ease;
-  will-change: transform, box-shadow;
 }
 
 .wish-card:hover {
@@ -1635,7 +1627,7 @@ body {
 
 .footer-glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(12px);
   padding: 3.5rem 2rem;
   border-radius: 32px;
   border: 1px solid var(--glass-border);
@@ -1681,40 +1673,53 @@ body {
   padding-top: 1.2rem;
 }
 
-/* MODAL OVERLAY */
+/* MODAL OVERLAY & RESPONSIVE DIALOG SYSTEM */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 2000;
+  height: 100dvh;
+  background: rgba(12, 4, 10, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
 .modal-content {
-  max-width: 480px;
-  width: 90%;
-  padding: 3rem 2rem;
+  max-width: 460px;
+  width: 92%;
+  max-height: calc(100dvh - 2rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  padding: 2.2rem 1.6rem;
   text-align: center;
   position: relative;
   background: white;
-  transform: scale(0.8) translateY(20px);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 25px 60px rgba(255, 117, 143, 0.3);
+  border-radius: var(--radius-lg);
+  transform: scale(0.92) translateY(18px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  margin: auto;
 }
 
 .modal-overlay.active .modal-content {
@@ -1723,19 +1728,28 @@ body {
 
 .modal-close-btn {
   position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 2rem;
-  background: none;
-  border: none;
-  color: var(--text-muted);
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   cursor: pointer;
-  transition: transform 0.3s var(--transition-bounce), color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  z-index: 20;
 }
 
 .modal-close-btn:hover {
-  color: var(--primary-hover);
-  transform: scale(1.25) rotate(90deg);
+  background: rgba(255, 77, 109, 0.85);
+  color: #ffffff;
+  transform: scale(1.12) rotate(90deg);
 }
 
 .big-hug-emoji {
@@ -1930,8 +1944,8 @@ button, input, select, textarea, a {
   width: 100%;
   height: 64px;
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   border-top: 1px solid rgba(255, 117, 143, 0.25);
   box-shadow: 0 -4px 20px rgba(255, 117, 143, 0.12);
   z-index: 1500;
@@ -2162,7 +2176,6 @@ button, input, select, textarea, a {
   overflow: visible;
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
 }
 
 .hero-vector-frame:hover {
@@ -2187,7 +2200,6 @@ button, input, select, textarea, a {
   height: 260px;
   background: radial-gradient(circle, rgba(255, 117, 143, 0.25) 0%, rgba(255, 183, 3, 0.16) 45%, transparent 72%);
   animation: teaAuraPulseRing 3.6s ease-in-out infinite;
-  will-change: transform, opacity;
 }
 
 .hero-vector-frame::after {
@@ -2196,7 +2208,6 @@ button, input, select, textarea, a {
   border: 1.5px solid rgba(255, 117, 143, 0.3);
   animation: teaRingExpand 4.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
   animation-delay: -1.8s;
-  will-change: transform, opacity;
 }
 
 @keyframes teaAuraPulseRing {
@@ -2208,7 +2219,7 @@ button, input, select, textarea, a {
   50% {
     transform: translate3d(-50%, -50%, 0) scale3d(1.15, 1.15, 1);
     opacity: 0.85;
-    filter: blur(20px);
+    filter: blur(12px);
   }
 }
 
@@ -2237,7 +2248,6 @@ button, input, select, textarea, a {
   z-index: 1;
   filter: drop-shadow(0 8px 24px rgba(255, 117, 143, 0.22));
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
 }
 
 .hero-vector-frame:hover .hero-vector-art {
@@ -2246,7 +2256,6 @@ button, input, select, textarea, a {
 
 /* Organic Breathing Steam Lines with Hardware-Accelerated Plume Physics */
 .steam-line {
-  will-change: transform, opacity;
   transform-origin: bottom center;
 }
 
@@ -2525,7 +2534,6 @@ button, input, select, textarea, a {
   filter: blur(60px);
   opacity: 0.45;
   z-index: 0;
-  will-change: transform, opacity;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   transition: opacity 0.6s ease, filter 0.6s ease;
@@ -2614,8 +2622,8 @@ button, input, select, textarea, a {
 /* Dark Glass Framing Container & Hover Depth Micro-Interactions */
 .glass-panel-dark {
   background: radial-gradient(circle at 50% 50%, rgba(38, 14, 24, 0.96) 0%, rgba(22, 8, 15, 0.98) 60%, rgba(10, 4, 8, 0.99) 100%);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   border: 2px solid #ffd700;
   box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85),
@@ -2629,7 +2637,6 @@ button, input, select, textarea, a {
   z-index: 1;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  will-change: transform, box-shadow, border-color;
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.45s ease;
@@ -2697,7 +2704,6 @@ button, input, select, textarea, a {
   animation: shimmerLightSweep 6.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
   z-index: 2;
-  will-change: left;
 }
 
 @keyframes shimmerLightSweep {
@@ -2724,7 +2730,6 @@ button, input, select, textarea, a {
   border-radius: 50%;
   box-shadow: 0 0 8px #ffd700, 0 0 14px #ffe57f;
   opacity: 0.75;
-  will-change: transform, opacity;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
@@ -2821,7 +2826,6 @@ button, input, select, textarea, a {
   position: relative;
   z-index: 2;
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
-  will-change: transform, border-color, box-shadow;
   transform: translate3d(0, 0, 0);
   transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
@@ -2841,7 +2845,6 @@ button, input, select, textarea, a {
   border-style: solid;
   pointer-events: none;
   filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
-  will-change: transform, filter, border-color;
   transform: translate3d(0, 0, 0);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               filter 0.4s ease,
@@ -2899,7 +2902,6 @@ button, input, select, textarea, a {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85),
               0 0 25px rgba(255, 117, 143, 0.4),
               inset 0 0 18px rgba(255, 215, 0, 0.22);
-  will-change: transform, box-shadow, border-color;
   transform: translate3d(0, 0, 0);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.4s ease,
@@ -2942,7 +2944,6 @@ button, input, select, textarea, a {
   text-shadow: 0 0 10px #ffd700, 0 0 20px #ffe57f;
   letter-spacing: 2px;
   opacity: 0.9;
-  will-change: transform, filter;
   transition: transform 0.4s ease, filter 0.4s ease;
 }
 
@@ -2991,7 +2992,6 @@ button, input, select, textarea, a {
               0 0 35px rgba(255, 117, 143, 0.35),
               inset 0 0 22px rgba(255, 215, 0, 0.15);
   padding: 0.6rem 1rem;
-  will-change: transform, box-shadow, border-color;
   transform: translate3d(0, 0, 0);
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.45s ease,
@@ -3050,7 +3050,6 @@ button, input, select, textarea, a {
                0 0 16px rgba(255, 215, 0, 0.8),
                0 0 32px rgba(255, 215, 0, 0.5),
                0 0 55px rgba(212, 175, 55, 0.3);
-  will-change: transform, text-shadow;
   transform: translate3d(0, 0, 0);
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.45s ease;
 }
@@ -3088,7 +3087,6 @@ button, input, select, textarea, a {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8),
               0 0 25px rgba(255, 117, 143, 0.25),
               inset 0 0 15px rgba(255, 215, 0, 0.12);
-  will-change: transform, box-shadow, border-color;
   transform: translate3d(0, 0, 0);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               border-color 0.4s ease,
@@ -3153,7 +3151,6 @@ button, input, select, textarea, a {
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.85),
               0 0 28px rgba(255, 117, 143, 0.4),
               inset 0 0 20px rgba(255, 215, 0, 0.22);
-  will-change: transform, border-color, box-shadow;
   transform: translate3d(0, 0, 0);
   transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
               border-color 0.38s ease,
@@ -3383,8 +3380,8 @@ button, input, select, textarea, a {
 
 /* Footer glass refinement */
 .site-footer {
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   border-top: 2px solid rgba(255, 215, 0, 0.28) !important;
 }
 
@@ -3477,93 +3474,156 @@ button, input, select, textarea, a {
   color: var(--primary-hover);
 }
 
-/* Repeat Surprise VIP Modal */
+/* Repeat Surprise VIP Modal - Fully Responsive & Viewport Safe */
 .repeat-surprise-card {
-  max-width: 520px !important;
-  background: radial-gradient(circle at center, #23121b 0%, #150910 100%) !important;
-  border: 2px solid #ffb703 !important;
-  box-shadow: 0 25px 75px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 183, 3, 0.45) !important;
-  padding: 2.8rem 2.2rem !important;
+  max-width: 440px !important;
+  width: 100% !important;
+  max-height: min(620px, calc(100dvh - 2rem)) !important;
+  max-height: min(620px, calc(100vh - 2rem)) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 0%, #281020 0%, #170712 60%, #0c0409 100%) !important;
+  border: 1.8px solid #ffb703 !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(255, 183, 3, 0.35) !important;
+  padding: 1.6rem 1.3rem !important;
+  text-align: center;
+  margin: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 183, 3, 0.4) transparent;
+}
+
+.repeat-surprise-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.repeat-surprise-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.repeat-surprise-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 183, 3, 0.4);
+  border-radius: 10px;
+}
+
+.repeat-surprise-card:hover {
+  transform: none !important;
 }
 
 .repeat-trophy-aura {
   position: relative;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.35rem;
 }
 
 .repeat-trophy-icon {
-  font-size: 3.8rem;
+  font-size: clamp(2rem, 5vw, 2.4rem);
   display: inline-block;
   animation: trophyFloat 2s ease-in-out infinite alternate;
-  filter: drop-shadow(0 8px 20px rgba(255, 183, 3, 0.7));
+  filter: drop-shadow(0 6px 16px rgba(255, 183, 3, 0.6));
 }
 
 @keyframes trophyFloat {
   0% { transform: translateY(0) rotate(0deg); }
-  100% { transform: translateY(-10px) rotate(6deg) scale(1.1); }
+  100% { transform: translateY(-5px) rotate(5deg) scale(1.05); }
 }
 
 .repeat-sparkle-ring {
   display: block;
-  font-size: 1.2rem;
-  letter-spacing: 4px;
-  margin-top: 4px;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-top: 2px;
 }
 
 .repeat-chip {
   display: inline-block;
-  background: rgba(255, 183, 3, 0.2);
+  background: rgba(255, 183, 3, 0.18);
   border: 1px solid #ffb703;
   color: #ffe57f;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 1.5px;
-  padding: 4px 14px;
+  letter-spacing: 1.2px;
+  padding: 3px 12px;
   border-radius: 50px;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.45rem;
 }
 
 .repeat-title {
   font-family: var(--font-heading);
-  font-size: 1.75rem;
+  font-size: clamp(1.18rem, 3.6vw, 1.45rem);
+  line-height: 1.25;
   color: #ffffff !important;
-  margin-bottom: 0.8rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.45rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .repeat-desc {
-  font-size: 1.02rem;
+  font-size: clamp(0.84rem, 2.3vw, 0.92rem);
   color: #ffe8ee;
-  line-height: 1.6;
-  margin-bottom: 1.4rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
 }
 
 .repeat-desc strong {
   color: #ffd700;
-  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .repeat-perk-box {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
   text-align: left;
+  margin-bottom: 0.6rem;
 }
 
 .perk-item {
-  font-size: 0.95rem;
+  font-size: clamp(0.78rem, 2.2vw, 0.85rem);
   color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .perk-item span {
   color: #ffd6e0;
+}
+
+@media (max-height: 620px) {
+  .repeat-surprise-card {
+    padding: 1rem 1rem !important;
+  }
+  .repeat-trophy-aura {
+    margin-bottom: 0.15rem;
+  }
+  .repeat-trophy-icon {
+    font-size: 1.8rem;
+  }
+  .repeat-chip {
+    padding: 2px 8px;
+    font-size: 0.68rem;
+    margin-bottom: 0.3rem;
+  }
+  .repeat-title {
+    font-size: 1.12rem;
+    margin-bottom: 0.3rem;
+  }
+  .repeat-desc {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    margin-bottom: 0.45rem;
+  }
+  .repeat-perk-box {
+    padding: 6px 10px;
+    gap: 3px;
+    margin-bottom: 0.4rem;
+  }
+  .perk-item {
+    font-size: 0.76rem;
+  }
 }
 
 /* Sincere Creator Note: AI coded, but all words & images by Arsalan */
@@ -3650,14 +3710,15 @@ button, input, select, textarea, a {
 }
 
 .modal-ai-note {
-  font-size: 0.85rem;
+  font-size: clamp(0.72rem, 2vw, 0.78rem);
   color: #ffd6e0;
-  margin-top: 12px;
+  margin-top: 6px;
   text-align: center;
   background: rgba(255, 255, 255, 0.05);
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: var(--radius-pill);
   border: 1px dashed rgba(255, 183, 3, 0.4);
+  line-height: 1.35;
 }
 
 .footer-dedication-sub {
@@ -4157,8 +4218,8 @@ button, input, select, textarea, a {
     height: 100dvh !important;
     z-index: 999999 !important;
     background: radial-gradient(circle at center, rgba(30, 20, 45, 0.96) 0%, rgba(12, 9, 20, 0.98) 100%) !important;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
@@ -4175,8 +4236,8 @@ button, input, select, textarea, a {
     text-align: center;
     max-width: 420px;
     width: 100%;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     animation: pcCardPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 

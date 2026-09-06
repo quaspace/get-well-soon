@@ -46,11 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 2. DYNAMIC HEALTH CANVAS BACKGROUND PARTICLES
+  // 2. DYNAMIC HEALTH CANVAS BACKGROUND PARTICLES (High-Performance & Viewport Aware)
   const canvas = document.getElementById('health-canvas');
+  const bgContainer = document.getElementById('motion-bg-container');
   const ctx = canvas ? canvas.getContext('2d') : null;
   let particles = [];
-  let mouse = { x: null, y: null, radius: 150 };
+  let mouse = { x: null, y: null, radius: 140 };
+  let isCanvasVisible = true;
+  let canvasRafId = null;
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -62,12 +65,20 @@ document.addEventListener('DOMContentLoaded', () => {
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeCanvas, 200);
-  });
+    resizeTimer = setTimeout(resizeCanvas, 250);
+  }, { passive: true });
+
+  let mouseTicking = false;
   window.addEventListener('mousemove', (e) => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
+    if (!mouseTicking) {
+      requestAnimationFrame(() => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouseTicking = false;
+      });
+      mouseTicking = true;
+    }
+  }, { passive: true });
 
   class HealthParticle {
     constructor() {
@@ -77,12 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
     reset() {
       this.x = Math.random() * (canvas ? canvas.width : 1000);
       this.y = Math.random() * (canvas ? canvas.height : 1000);
-      this.size = Math.random() * 14 + 10;
-      this.speedX = (Math.random() - 0.5) * 0.8;
-      this.speedY = (Math.random() - 0.5) * 0.8;
+      this.size = Math.random() * 10 + 8;
+      this.speedX = (Math.random() - 0.5) * 0.6;
+      this.speedY = (Math.random() - 0.5) * 0.6;
       this.type = Math.floor(Math.random() * 4); // 0: Cross, 1: Heart, 2: Pill, 3: Sparkle
-      this.opacity = Math.random() * 0.4 + 0.15;
-      this.angle = Math.random() * Math.PI * 2;
+      this.opacity = Math.random() * 0.35 + 0.15;
     }
 
     update() {
@@ -90,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.y += this.speedY;
 
       // Scroll speed influence
-      this.y -= (window.scrollY - lastScrollY) * 0.15;
+      this.y -= (window.scrollY - lastScrollY) * 0.1;
 
       // Wrap boundaries
       if (canvas) {
@@ -105,10 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < mouse.radius) {
+        if (dist < mouse.radius && dist > 1) {
           const force = (mouse.radius - dist) / mouse.radius;
-          this.x -= (dx / dist) * force * 3;
-          this.y -= (dy / dist) * force * 3;
+          this.x -= (dx / dist) * force * 2.2;
+          this.y -= (dy / dist) * force * 2.2;
         }
       }
     }
@@ -139,7 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pill Capsule
         ctx.fillStyle = '#81c784';
         ctx.beginPath();
-        ctx.roundRect(-this.size / 2, -this.size / 4, this.size, this.size / 2, 8);
+        if (ctx.roundRect) {
+          ctx.roundRect(-this.size / 2, -this.size / 4, this.size, this.size / 2, 6);
+        } else {
+          ctx.rect(-this.size / 2, -this.size / 4, this.size, this.size / 2);
+        }
         ctx.fill();
       } else {
         // Healing Sparkle
@@ -154,25 +168,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initParticles() {
     particles = [];
-    const count = Math.floor(window.innerWidth / 30);
+    const count = Math.min(20, Math.max(8, Math.floor(window.innerWidth / 85)));
     for (let i = 0; i < count; i++) {
       particles.push(new HealthParticle());
     }
   }
 
   function animateCanvas() {
+    canvasRafId = null;
+    if (!isCanvasVisible || document.hidden) return;
+
     if (ctx && canvas) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
     }
-    requestAnimationFrame(animateCanvas);
+    canvasRafId = requestAnimationFrame(animateCanvas);
   }
 
+  function resumeCanvas() {
+    if (!canvasRafId && isCanvasVisible && !document.hidden) {
+      canvasRafId = requestAnimationFrame(animateCanvas);
+    }
+  }
+
+  // Modern IntersectionObserver: Pause canvas when hero is scrolled out of view
+  if (bgContainer && 'IntersectionObserver' in window) {
+    const bgObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isCanvasVisible = entry.isIntersecting;
+        if (isCanvasVisible) {
+          resumeCanvas();
+        } else if (canvasRafId) {
+          cancelAnimationFrame(canvasRafId);
+          canvasRafId = null;
+        }
+      });
+    }, { threshold: 0.05 });
+    bgObserver.observe(bgContainer);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (canvasRafId) {
+        cancelAnimationFrame(canvasRafId);
+        canvasRafId = null;
+      }
+    } else {
+      resumeCanvas();
+    }
+  });
+
   resizeCanvas();
-  animateCanvas();
+  resumeCanvas();
 
   // 3. AUDIO SYNTHESIZER (SOOTHING AMBIENT MUSIC)
   const soundBtn = document.getElementById('sound-toggle-btn');
@@ -494,34 +544,36 @@ document.addEventListener('DOMContentLoaded', () => {
   if (quranSection) quranObserver.observe(quranSection);
 
 
-  // UTILITIES: CONFETTI & TOAST
+  // UTILITIES: CONFETTI & TOAST (Lightweight & Hardware Accelerated)
   function triggerConfetti() {
     const colors = ['#ff4d6d', '#ff758f', '#ff85a2', '#ffb3c6', '#ffccd5', '#ffb703'];
-    for (let i = 0; i < 35; i++) {
+    const count = window.innerWidth < 768 ? 14 : 22;
+    for (let i = 0; i < count; i++) {
       setTimeout(() => {
         const conf = document.createElement('div');
         const color = colors[Math.floor(Math.random() * colors.length)];
         const useHeart = Math.random() < 0.5;
         if (useHeart) {
-          conf.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+          conf.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="${color}"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
         } else {
-          conf.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+          conf.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
         }
+        const dur = (Math.random() * 1.5 + 1.8).toFixed(2);
         conf.style.position = 'fixed';
-        conf.style.left = `${Math.random() * 100}vw`;
+        conf.style.left = `${Math.random() * 96 + 2}vw`;
         conf.style.top = '-20px';
         conf.style.zIndex = '3000';
         conf.style.pointerEvents = 'none';
-        conf.style.transition = `all ${Math.random() * 2 + 2}s cubic-bezier(0.25, 1, 0.5, 1)`;
+        conf.style.transition = `transform ${dur}s cubic-bezier(0.25, 1, 0.5, 1), opacity ${dur}s ease-in`;
 
         document.body.appendChild(conf);
 
-        setTimeout(() => {
-          conf.style.transform = `translateY(105vh) rotate(${Math.random() * 720 - 360}deg)`;
+        requestAnimationFrame(() => {
+          conf.style.transform = `translate3d(0, 105vh, 0) rotate(${Math.random() * 540 - 270}deg)`;
           conf.style.opacity = '0';
-        }, 50);
+        });
 
-        setTimeout(() => conf.remove(), 4000);
+        setTimeout(() => conf.remove(), dur * 1000 + 200);
       }, i * 35);
     }
   }
@@ -621,27 +673,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. MOBILE BOTTOM DOCK SCROLL OBSERVER
+  // 10. MOBILE BOTTOM DOCK SCROLL OBSERVER (Zero-Jank IntersectionObserver)
   const dockItems = document.querySelectorAll('.dock-item');
-  const pageSections = document.querySelectorAll('section');
+  const pageSections = document.querySelectorAll('section[id]');
 
-  window.addEventListener('scroll', () => {
-    let currentSectionId = 'hero';
-    const scrollPos = window.scrollY + 220;
+  if ('IntersectionObserver' in window) {
+    const dockObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          dockItems.forEach((item) => {
+            if (item.getAttribute('href') === `#${id}`) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -55% 0px', threshold: 0.05 });
 
-    pageSections.forEach((sec) => {
-      if (scrollPos >= sec.offsetTop) {
-        currentSectionId = sec.getAttribute('id');
-      }
-    });
-
-    dockItems.forEach((item) => {
-      item.classList.remove('active');
-      if (item.getAttribute('href') === `#${currentSectionId}`) {
-        item.classList.add('active');
-      }
-    });
-  });
+    pageSections.forEach((sec) => dockObserver.observe(sec));
+  }
 
   // Dock smooth scroll — override default anchor jump with smooth scrollIntoView
   dockItems.forEach((item) => {
@@ -707,6 +760,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (repeatModalClose) repeatModalClose.addEventListener('click', closeRepeatModal);
+  if (repeatModal) {
+    repeatModal.addEventListener('click', (e) => {
+      if (e.target === repeatModal) {
+        closeRepeatModal();
+      }
+    });
+  }
   if (repeatModalBtn) {
     repeatModalBtn.addEventListener('click', () => {
       closeRepeatModal();
@@ -746,15 +806,27 @@ document.addEventListener('DOMContentLoaded', () => {
       holoInner.classList.toggle('is-flipped');
     });
 
-    // 3D Parallax Tilt on Mouse Move (Desktop)
+    // 3D Parallax Tilt on Mouse Move (Desktop, RAF Throttled)
+    let holoTicking = false;
+    let lastHoloE = null;
+
     holoCard.addEventListener('mousemove', (e) => {
-      const rect = holoCard.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      const isFlipped = holoInner.classList.contains('is-flipped');
-      const flipY = isFlipped ? 180 : 0;
-      holoInner.style.transform = `rotateY(${flipY + x * 0.08}deg) rotateX(${-y * 0.08}deg)`;
-    });
+      lastHoloE = e;
+      if (!holoTicking) {
+        requestAnimationFrame(() => {
+          if (lastHoloE) {
+            const rect = holoCard.getBoundingClientRect();
+            const x = lastHoloE.clientX - rect.left - rect.width / 2;
+            const y = lastHoloE.clientY - rect.top - rect.height / 2;
+            const isFlipped = holoInner.classList.contains('is-flipped');
+            const flipY = isFlipped ? 180 : 0;
+            holoInner.style.transform = `rotateY(${flipY + x * 0.08}deg) rotateX(${-y * 0.08}deg)`;
+          }
+          holoTicking = false;
+        });
+        holoTicking = true;
+      }
+    }, { passive: true });
 
     holoCard.addEventListener('mouseleave', () => {
       const isFlipped = holoInner.classList.contains('is-flipped');
@@ -811,22 +883,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3D Parallax Tilt & Specular Glare on Hero Glass Card (Desktop)
+  // 3D Parallax Tilt & Specular Glare on Hero Glass Card (Desktop, RAF Throttled)
   const heroCardElement = document.querySelector('.hero-glass-card');
   if (heroCardElement && window.matchMedia('(pointer: fine)').matches) {
+    let heroTicking = false;
+    let lastHeroE = null;
+
     heroCardElement.addEventListener('mousemove', (e) => {
-      const rect = heroCardElement.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -3.5;
-      const rotateY = ((x - centerX) / centerX) * 3.5;
-      
-      heroCardElement.style.setProperty('--card-mouse-x', `${(x / rect.width) * 100}%`);
-      heroCardElement.style.setProperty('--card-mouse-y', `${(y / rect.height) * 100}%`);
-      heroCardElement.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(0, -4px, 0)`;
-    });
+      lastHeroE = e;
+      if (!heroTicking) {
+        requestAnimationFrame(() => {
+          if (lastHeroE) {
+            const rect = heroCardElement.getBoundingClientRect();
+            const x = lastHeroE.clientX - rect.left;
+            const y = lastHeroE.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -3.5;
+            const rotateY = ((x - centerX) / centerX) * 3.5;
+            
+            heroCardElement.style.setProperty('--card-mouse-x', `${(x / rect.width) * 100}%`);
+            heroCardElement.style.setProperty('--card-mouse-y', `${(y / rect.height) * 100}%`);
+            heroCardElement.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(0, -4px, 0)`;
+          }
+          heroTicking = false;
+        });
+        heroTicking = true;
+      }
+    }, { passive: true });
 
     heroCardElement.addEventListener('mouseleave', () => {
       heroCardElement.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
